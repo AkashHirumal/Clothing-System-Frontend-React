@@ -1,0 +1,26 @@
+.alert-container {
+  width: 200px; 
+  color: black;
+  animation: animate 3s forwards;
+  -webkit-animation: animate 2s forwards;
+  z-index: 1000000;
+}
+
+@keyframes animate {
+  0% {
+    transform: translate(200px);
+    -webkit-transform: translate(200px);
+    -moz-transform: translate(200px);
+    -ms-transform: translate(200px);
+    -o-transform: translate(200px);
+}
+  50% {
+    transform: translate(0px);
+  }
+  65% {
+    opacity: 100%;
+  }
+  100% {
+    opacity: 0%;
+  }
+}
