@@ -2,19 +2,20 @@ import { useState } from "react";
 import "./LoginPage.css";
 import AlertComponent from "../../../components/UserPages/alerts/AlertComponent";
 import axiosClient from "../../../../axiosConfig";
+
 function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isInvalid, setIsInvalid] = useState(false);
   const [error, setError] = useState("");
 
-  function userLogin(e: any) {
+  function userLogin(e: React.FormEvent) {
     e.preventDefault();
-    if (email == "" || password == "") {
+    if (email === "" || password === "") {
       setError("Fill all fields");
       showAlertInvalid();
     } else {
-      const user: User = new User(email, password);
+      const user = { email, password };
       axiosClient
         .post("/user/login", user, { withCredentials: true })
         .then((result) => {
@@ -23,18 +24,19 @@ function LoginPage() {
           }
         })
         .catch(() => {
-          setError("invalid credentials");
+          setError("Invalid credentials");
           showAlertInvalid();
         });
     }
   }
-  function userSignup(e: any) {
+
+  function userSignup(e: React.FormEvent) {
     e.preventDefault();
-    if (email == "" || password == "") {
+    if (email === "" || password === "") {
       setError("Fill all fields");
       showAlertInvalid();
     } else {
-      const user: User = new User(email, password);
+      const user = { email, password };
       axiosClient
         .post("/user/register-user", user, { withCredentials: true })
         .then((result) => {
@@ -53,38 +55,40 @@ function LoginPage() {
     setIsInvalid(true);
     setTimeout(() => setIsInvalid(false), 2000);
   }
-  return (
-    <div>
-      {isInvalid && <AlertComponent msg={error} />}
 
-      <div className="w-100 d-flex justify-content-center mt-5">
-        <div>
+  return (
+    <div className="split-container">
+      <div className="photo-section">
+        {/* Photo is handled via CSS background */}
+      </div>
+      <div className="form-section">
+        <div className="form-container">
+          {isInvalid && <AlertComponent msg={error} />}
+          <h2 className="form-title">Welcome to FashionHub</h2>
           <div className="form-group">
-            <label form="exampleInputEmail1">Email address</label>
+            <label htmlFor="exampleInputEmail1">Email address</label>
             <input
               type="email"
               className="form-control"
               id="exampleInputEmail1"
               aria-describedby="emailHelp"
               placeholder="Enter email"
-              onChange={(e) => {
-                setEmail(e.target.value);
-              }}
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
             />
             <small id="emailHelp" className="form-text text-muted">
               We'll never share your email with anyone else.
             </small>
           </div>
           <div className="form-group">
-            <label form="exampleInputPassword1">Password</label>
+            <label htmlFor="exampleInputPassword1">Password</label>
             <input
               type="password"
               className="form-control"
               id="exampleInputPassword1"
               placeholder="Password"
-              onChange={(e) => {
-                setPassword(e.target.value);
-              }}
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
             />
           </div>
           <div className="form-group form-check">
@@ -93,26 +97,22 @@ function LoginPage() {
               className="form-check-input"
               id="exampleCheck1"
             />
-            <label className="form-check-label" form="exampleCheck1">
+            <label className="form-check-label" htmlFor="exampleCheck1">
               Check me out
             </label>
           </div>
-          <div className="w-100 d-flex justify-content-between gap-4 mt-3">
+          <div className="d-flex gap-4 mt-3">
             <button
               type="submit"
-              className="w-50 btn btn-primary"
-              onClick={(e) => {
-                userLogin(e);
-              }}
+              className="btn btn-primary"
+              onClick={userLogin}
             >
               Login
             </button>
             <button
               type="submit"
-              className="w-50 btn btn-dark"
-              onClick={(e) => {
-                userSignup(e);
-              }}
+              className="btn btn-dark"
+              onClick={userSignup}
             >
               Signup
             </button>
@@ -121,14 +121,6 @@ function LoginPage() {
       </div>
     </div>
   );
-}
-class User {
-  email: string;
-  password: string;
-  constructor(email: string, password: string) {
-    this.email = email;
-    this.password = password;
-  }
 }
 
 export default LoginPage;
